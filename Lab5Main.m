@@ -1,0 +1,45 @@
+%% Task 1
+%% Task 2
+clear; clc; close all;
+
+% TEST CASE 1
+% initial state - all 0 except for h = 1609.34 m and u = 21 m/s
+x0 = [0;
+      0;
+      -1609.34;
+      0;
+      0;
+      0;
+      21;
+      0;
+      0;
+      0;
+      0;
+      0]; 
+
+% control surfaces all set to 0
+aircraft_surfaces = [0; 0; 0; 0]; 
+
+% wind angles all set to 0
+wind_inertial = [0; 0; 0];
+
+% time span
+tspan = [0 120];
+
+% run ode45 with EOM function
+ode = @(t, x) AircraftEOM(t, x, control_surfaces, wind_inertial, aircraft_parameters); 
+options = odeset('RelTol', 1e-6, 'AbsTol', 1e-8); 
+[t, x] = ode45(ode, tspan, x0, options); 
+
+% plots
+figure('Position', [50 50 1400 900], 'Name', 'Test Case 1: Near Trim Condition');
+
+% 3D trajectory
+subplot(3,4,1); 
+plot3(x(:,1), x(:,2), x(:,3), 'b-', 'LineWidth', 1.5); 
+xlabel('X (m)'); 
+ylabel('Y (m)');
+zlabel('Altitude (m)'); 
+title('3D Flight Path')
+grid on; axis eq
+%% Task 3

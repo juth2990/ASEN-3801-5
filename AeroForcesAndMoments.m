@@ -69,4 +69,4 @@ Cn = ap.b*[ap.Cn0 + ap.Cnbeta*beta + ap.Cnp*p*ap.b/(2*V) + ap.Cnr*r*ap.b/(2*V) +
 
 %%% determine aero moments from coeffficients
 aero_moments = Q*ap.S*[Cl; Cm; Cn];%[l;m;n];
-
+end
