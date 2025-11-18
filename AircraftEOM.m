@@ -11,7 +11,7 @@ function xdot = AircraftEOM(time, aircraft_state, aircraft_surfaces, wind_inerti
     u = aircraft_state(7,1);
     v = aircraft_state(8,1);
     w = aircraft_state(9,1);
-    p = aicraft_state(10,1);
+    p = aircraft_state(10,1);
     q = aircraft_state(11,1);
     r = aircraft_state(12,1); 
     

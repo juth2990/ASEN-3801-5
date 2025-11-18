@@ -4,6 +4,8 @@ clear; clc; close all;
 
 % TEST CASE 1
 % initial state - all 0 except for h = 1609.34 m and u = 21 m/s
+ttwistor
+
 x0 = [0;
       0;
       -1609.34;
@@ -27,7 +29,7 @@ wind_inertial = [0; 0; 0];
 tspan = [0 120];
 
 % run ode45 with EOM function
-ode = @(t, x) AircraftEOM(t, x, control_surfaces, wind_inertial, aircraft_parameters); 
+ode = @(t, x) AircraftEOM(t, x0, aircraft_surfaces, wind_inertial, aircraft_parameters); 
 options = odeset('RelTol', 1e-6, 'AbsTol', 1e-8); 
 [t, x] = ode45(ode, tspan, x0, options); 
 
