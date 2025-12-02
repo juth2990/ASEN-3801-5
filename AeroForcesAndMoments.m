@@ -16,7 +16,7 @@ function [aero_forces, aero_moments] = AeroForcesAndMoments(aircraft_state, airc
 %%% redefine states and inputs for ease of use
 ap = aircraft_parameters;
 
-wind_body = TransformFromInertialToBody(wind_inertial, aircraft_state(4:6,1));
+wind_body = TransformFromInertialToBody(wind_inertial, aircraft_state);
 air_rel_vel_body = aircraft_state(7:9,1) - wind_body;
 
 [wind_angles] = WindAnglesFromVelocityBody(air_rel_vel_body);

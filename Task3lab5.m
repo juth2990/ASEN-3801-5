@@ -32,3 +32,5 @@ doublet_size = 15*(2*pi)/180; % degrees
 ode = @(t, x) AircraftEOMDoublet(t, x, aircraft_surfaces, doublet_size,doublet_time, wind_inertial, aircraft_parameters); 
 options = odeset('RelTol', 1e-6, 'AbsTol', 1e-8); 
 [t, x] = ode45(ode, tspan, aircraft_state, options); 
+
+    PlotAircraftSim(t, x', aircraft_surfaces,fig, col)

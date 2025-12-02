@@ -1,4 +1,5 @@
-function xdot = AircraftEOMDoublet(time, aircraft_state, aircraft_surfaces, doublet_size,doublet_time, wind_inertial, aircraft_parameters)
+function xdot = AircraftEOM2(time, aircraft_state, aircraft_surfaces, wind_inertial, aircraft_parameters)
+
     % aircraft_state = [xi, yi, zi, roll, pitch, yaw, u, v, w, p, q, r]
     % extract states
     x = aircraft_state(1);
@@ -13,6 +14,7 @@ function xdot = AircraftEOMDoublet(time, aircraft_state, aircraft_surfaces, doub
     p = aircraft_state(10);
     q = aircraft_state(11);
     r = aircraft_state(12); 
+    
     % aircraft_surfaces = [de da dr dt];
     % extract control surfaces
     de = aircraft_surfaces(1); 
@@ -48,16 +50,6 @@ function xdot = AircraftEOMDoublet(time, aircraft_state, aircraft_surfaces, doub
 
     % initialize xdot vector
     xdot = zeros(12,1); 
-    %% Changing Elevator deflection
- 
-    if 0 < time && time <= doublet_time
-        deltaE = aircraft_surfaces(1) + doublet_size;
-    elseif doublet_time < time && time <= 2*doublet_time
-        deltaE = aircraft_surfaces(1) - doublet_size;
-    else
-        deltaE = aircraft_surfaces(1);
-    end
-
     
     %% Kinematic Equations: 
     
@@ -113,4 +105,6 @@ function xdot = AircraftEOMDoublet(time, aircraft_state, aircraft_surfaces, doub
 
     % solve for r dot
     xdot(12) = gamma7 * p * q - gamma1 * q * r + gamma4 * L + gamma8 * N; 
+
 end
+

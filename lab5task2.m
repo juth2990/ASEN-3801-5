@@ -244,7 +244,7 @@ function xdot = AircraftEOM(time, aircraft_state, aircraft_surfaces, wind_inerti
     % solve for r dot
     xdot(12) = gamma7 * p * q - gamma1 * q * r + gamma4 * L + gamma8 * N; 
 
-end
+    end 
 
 function B = TransformFromInertialToBody(I,aircraft_state)
 
