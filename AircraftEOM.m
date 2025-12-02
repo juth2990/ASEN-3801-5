@@ -2,32 +2,33 @@ function xdot = AircraftEOM(time, aircraft_state, aircraft_surfaces, wind_inerti
 
     % aircraft_state = [xi, yi, zi, roll, pitch, yaw, u, v, w, p, q, r]
     % extract states
-    x = aircraft_state(1,1);
-    y = aircraft_state(2,1);
-    z = aircraft_state(3,1);
-    phi = aircraft_state(4,1); 
-    theta = aircraft_state(5,1);
-    psi = aircraft_state(6,1);
-    u = aircraft_state(7,1);
-    v = aircraft_state(8,1);
-    w = aircraft_state(9,1);
-    p = aircraft_state(10,1);
-    q = aircraft_state(11,1);
-    r = aircraft_state(12,1); 
+    x = aircraft_state(1);
+    y = aircraft_state(2);
+    z = aircraft_state(3);
+    phi = aircraft_state(4); 
+    theta = aircraft_state(5);
+    psi = aircraft_state(6);
+    u = aircraft_state(7);
+    v = aircraft_state(8);
+    w = aircraft_state(9);
+    p = aircraft_state(10);
+    q = aircraft_state(11);
+    r = aircraft_state(12); 
     
     % aircraft_surfaces = [de da dr dt];
     % extract control surfaces
-    de = aircraft_surfaces(1,1); 
-    da = aircraft_surfaces(2,1);
-    dr = aircraft_surfaces(3,1);
-    dt = aircraft_surfaces(4,1);
+    de = aircraft_surfaces(1); 
+    da = aircraft_surfaces(2);
+    dr = aircraft_surfaces(3);
+    dt = aircraft_surfaces(4);
     
-    % density = aircraft_parameters.rho; ??
+
+    [T,a,P,rho] = atmoscoesa(-z);
     g = aircraft_parameters.g; 
-    m = aircraft_paramters.m;
+    m = aircraft_parameters.m;
     
     % calculate aero forces and moments
-    [aero_forces, aero_moments] = AeroForcesAndMoments(aircraft_state, aircraft_surfaces, wind_inertial, density, aircraft_parameters);
+    [aero_forces, aero_moments] = AeroForcesAndMoments(aircraft_state, aircraft_surfaces, wind_inertial, rho, aircraft_parameters);
     
     % extract aero forces
     X = aero_forces(1); 
@@ -45,11 +46,14 @@ function xdot = AircraftEOM(time, aircraft_state, aircraft_surfaces, wind_inerti
     Iz = aircraft_parameters.Iz;
     Ixz = aircraft_parameters.Ixz; 
 
+    I = [Ix 0 Ixz;0 Iy 0; Ixz 0 Iz];
+
     % initialize xdot vector
     xdot = zeros(12,1); 
     
     %% Kinematic Equations: 
-    pE = TransformFromInertialToBody(I, aircraft_state(7:9,1)); 
+    
+    pE = TransformFromInertialToBody(I, aircraft_state); 
     % extract x_dot_E 
     % xdot(1) = ((cos(theta)*cos(psi))*u) + (((sin(phi)*sin(theta)*cos(psi))- (cos(phi)*sin(psi)))*v) + (((cos(phi)*sin(theta)*cos(psi))+(sin(phi)*sin(psi)))*w); 
     xdot(1) = pE(1,1); 
@@ -103,3 +107,4 @@ function xdot = AircraftEOM(time, aircraft_state, aircraft_surfaces, wind_inerti
     xdot(12) = gamma7 * p * q - gamma1 * q * r + gamma4 * L + gamma8 * N; 
 
 end
+

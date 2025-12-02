@@ -114,7 +114,4 @@ function xdot = AircraftEOMDoublet(time, aircraft_state, aircraft_surfaces, doub
 
     % solve for r dot
     xdot(12) = gamma7 * p * q - gamma1 * q * r + gamma4 * L + gamma8 * N; 
-
-
-
 end

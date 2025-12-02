@@ -53,7 +53,7 @@ options = odeset('RelTol', 1e-6, 'AbsTol', 1e-8);
 
 PlotAircraftSim(t, x', aircraft_surfaces,fig, col)
 
-function xdot = AircraftEOM(time, aircraft_state, aircraft_surfaces, wind_inertial, aircraft_parameters)
+
 %% Task 3
 aircraft_state = [0;
       0;
@@ -88,6 +88,7 @@ ode = @(t, x) AircraftEOMDoublet(t, aircraft_state, aircraft_surfaces, doublet_s
 options = odeset('RelTol', 1e-6, 'AbsTol', 1e-8); 
 [t, x] = ode45(ode, tspan, aircraft_state, options); 
 
+function xdot = AircraftEOM(time, aircraft_state, aircraft_surfaces, wind_inertial, aircraft_parameters)
 
     % aircraft_state = [xi, yi, zi, roll, pitch, yaw, u, v, w, p, q, r]
     % extract states

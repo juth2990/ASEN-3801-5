@@ -58,8 +58,8 @@ aircraft_state = [0;
       0;
       0]; 
 
-fig = [1 2 3 4 5 6]
-col = 'b'
+fig = [1 2 3 4 5 6];
+col = 'b';
 
 % control surfaces all set to 0
 aircraft_surfaces = [0.1079; 0; 0; 0.3182]; 
