@@ -135,6 +135,7 @@ if TEST_CASE_2_3
 end
 
 
+
 function xdot = AircraftEOM(time, aircraft_state, aircraft_surfaces, wind_inertial, aircraft_parameters)
 
     % aircraft_state = [xi, yi, zi, roll, pitch, yaw, u, v, w, p, q, r]
