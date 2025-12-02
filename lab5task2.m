@@ -7,86 +7,133 @@ clear; clc; close all;
 
 ttwistor
 
-%% TEST CASE 1
-% initial state - all 0 except for h = 1609.34 m and u = 21 m/s
-aircraft_state = [0;
-      0;
-      -1609.34;
-      0;
-      0;
-      0;
-      21;
-      0;
-      0;
-      0;
-      0;
-      0]; 
+%% Choose what to plot
 
-fig = [1 2 3 4 5 6]
-col = 'b'
+TEST_CASE_2_1 = 1;
+TEST_CASE_2_2 = 1;
+TEST_CASE_2_3 = 1;
 
-% control surfaces all set to 0
-aircraft_surfaces = [0; 0; 0; 0]; 
+%% TEST CASE 2.1
 
-% wind angles all set to 0
-wind_inertial = [0; 0; 0];
+if TEST_CASE_2_1
 
-% time span
-tspan = [0 120];
+    Q = '2.1 ';
+    
+    %initial state - all 0 except for h = 1609.34 m and u = 21 m/s
+    aircraft_state =  [0; %x
+                      0;  %y
+                      -1609.34;  %z
+                      0;  
+                      0;
+                      0;
+                      21;
+                      0;
+                      0;
+                      0;
+                      0;
+                      0]; 
+    
+    fig = [1 2 3 4 5 6];
+    col = 'b';
+    
+    % control surfaces all set to 0
+    aircraft_surfaces = [0; 0; 0; 0]; 
+    
+    % wind angles all set to 0
+    wind_inertial = [0; 0; 0];
+    
+    % time span
+    tspan = [0 120];
+    
+    % run ode45 with EOM function
+    ode = @(t, x) AircraftEOM(t, x, aircraft_surfaces, wind_inertial, aircraft_parameters); 
+    options = odeset('RelTol', 1e-6, 'AbsTol', 1e-8); 
+    [t, x] = ode45(ode, tspan, aircraft_state, options); 
+    
+    PlotAircraftSim(t, x', aircraft_surfaces,fig, col,Q)
 
-% run ode45 with EOM function
-ode = @(t, x) AircraftEOM(t, x, aircraft_surfaces, wind_inertial, aircraft_parameters); 
-options = odeset('RelTol', 1e-6, 'AbsTol', 1e-8); 
-[t, x] = ode45(ode, tspan, aircraft_state, options); 
+end
 
-% % % plots
-% % % % figure('Position', [50 50 1400 900], 'Name', 'Test Case 1: Near Trim Condition');
-% % figure
-% % % 3D trajectory
-% % subplot(3,4,1); 
-% % plot3(x(:,1), x(:,2), x(:,3), 'b-', 'LineWidth', 1.5); 
-% % xlabel('X (m)'); 
-% % ylabel('Y (m)');
-% % zlabel('Altitude (m)'); 
-% % title('3D Flight Path')
-% % grid on; 
+%% TEST CASE 2.2
 
-PlotAircraftSim(t, x', aircraft_surfaces,fig, col)
+if TEST_CASE_2_2
 
+    Q = '2.2 ';
 
-%% Task 3
-aircraft_state = [0;
-      0;
-      -1800;
-      0;
-      0.0278;
-      0;
-      20.99;
-      0;
-      0.5837;
-      0;
-      0;
-      0]; 
+    aircraft_state =  [0; %x
+                      0;  %y
+                      -1800;  %z
+                      0;  % phi
+                       0.02780; % theta
+                      0;  % psi
+                      20.99;  %u
+                      0;  %v
+                      .5837;  %w
+                      0;  %p
+                      0;  %q
+                      0];  %r
+    
+    fig = [7 8 9 10 11 12];
+    col = 'b';
+    
+    % control surfaces all set to 0
+    aircraft_surfaces = [0.1079; 0; 0; 0.3182]; 
+    
+    % wind angles all set to 0
+    wind_inertial = [0;0;0];
+    
+    % time span
+    tspan = [0 1000];
+    
+    % run ode45 with EOM function
+    ode = @(t, x) AircraftEOM(t, x, aircraft_surfaces, wind_inertial, aircraft_parameters); 
+    options = odeset('RelTol', 1e-6, 'AbsTol', 1e-8); 
+    [t, x] = ode45(ode, tspan, aircraft_state, options); 
+    
+    PlotAircraftSim(t, x', aircraft_surfaces,fig, col,Q)
 
-fig = [1 2 3 4 5 6]
-col = 'b'
+end
 
-% control surfaces all set to 0
-aircraft_surfaces = [0.1079; 0; 0; 0.3182]; 
+%% TEST CASE 2.3
 
-% wind angles all set to 0
-wind_inertial = [0; 0; 0];
+if TEST_CASE_2_3
 
-% time span
-tspan = [0 3];
+    Q = '2.3 ';
 
-doublet_time = 0.25;
-doublet_size = 15*(2*pi)/180; % degrees
+    aircraft_state =  [0; %x
+                      0;  %y
+                      -1800;  %z
+                      15*pi/180;  % phi
+                       -12*pi/180; % theta
+                      270*pi/180;  % psi
+                      19;  %u
+                      3;  %v
+                      -2;  %w
+                      .08*pi/180;  %p
+                      -.2*pi/180;  %q
+                      0];  %r
+    
+    fig = [13 14 15 16 17 18];
+    col = 'b';
+    
+    % control surfaces all set to 0
+    aircraft_surfaces = [5*pi/180; 2*pi/180; -13*pi/180; 0.3]; 
+    
+    % wind angles all set to 0
+    wind_inertial = [0;0;0];
+    
+    % time span
+    tspan = [0 200];
+    
+    % run ode45 with EOM function
+    ode = @(t, x) AircraftEOM(t, x, aircraft_surfaces, wind_inertial, aircraft_parameters); 
+    options = odeset('RelTol', 1e-6, 'AbsTol', 1e-8); 
+    [t, x] = ode45(ode, tspan, aircraft_state, options); 
+    
+    PlotAircraftSim(t, x', aircraft_surfaces,fig, col,Q)
 
-% run ode45 with EOM function
-ode = @(t, x) AircraftEOMDoublet(t, aircraft_state, aircraft_surfaces, doublet_size,doublet_time, wind_inertial, aircraft_parameters); 
-options = odeset('RelTol', 1e-6, 'AbsTol', 1e-8); 
-[t, x] = ode45(ode, tspan, aircraft_state, options); 
+end
+
 
 function xdot = AircraftEOM(time, aircraft_state, aircraft_surfaces, wind_inertial, aircraft_parameters)
 
@@ -307,7 +354,7 @@ wind_angles = [V; beta; alpha];
 
 end
 
-function PlotAircraftSim(time, aircraft_state_array, control_input,fig, col)
+function PlotAircraftSim(time, aircraft_state_array, control_input,fig,col,Q)
    
 
    control_input_array(1,:) = zeros(1,length(time))+control_input(1);
@@ -332,7 +379,7 @@ function PlotAircraftSim(time, aircraft_state_array, control_input,fig, col)
    plot(time, aircraft_state_array(3,:),col)
    ylabel('z_E [m]')
    xlabel('Time [s]')
-   saveas(gcf,'position.jpg');
+   saveas(gcf,append(Q,'position.jpg'));
 
    % Euler Angles subplot
    figure(fig(2))
@@ -351,7 +398,7 @@ function PlotAircraftSim(time, aircraft_state_array, control_input,fig, col)
    plot(time, aircraft_state_array(6,:), col)
    ylabel('\psi [rad]')
    xlabel('Time [s]')
-   saveas(gcf,'Euler.jpg');
+   saveas(gcf,append(Q,'Euler.jpg'));
  
    % Body-Frame Velocity subplot
    figure(fig(3))
@@ -370,7 +417,7 @@ function PlotAircraftSim(time, aircraft_state_array, control_input,fig, col)
    plot(time, aircraft_state_array(9,:), col)
    ylabel('w_E [m/s]')
    xlabel('Time [s]')
-   saveas(gcf,'Velocity.jpg');
+   saveas(gcf,append(Q,'Velocity.jpg'));
 
    % Angular Velocity subplot
    figure(fig(4))
@@ -389,7 +436,7 @@ function PlotAircraftSim(time, aircraft_state_array, control_input,fig, col)
    plot(time, aircraft_state_array(12,:), col)
    ylabel('r [rad/s]')
    xlabel('Time [s]')
-   saveas(gcf,'Angular Velocity.jpg');
+   saveas(gcf,append(Q,'Angular Velocity.jpg'));
 
    % control subplot
    figure(fig(5))
@@ -412,8 +459,7 @@ function PlotAircraftSim(time, aircraft_state_array, control_input,fig, col)
    hold on
    plot(time, control_input_array(4,:), col)
    ylabel('Thrust')
-   
-   saveas(gcf,'Control.jpg');
+   saveas(gcf,append(Q,'Control.jpg'));
 
    % 3D Flight Path
    figure(fig(6));
@@ -428,6 +474,6 @@ function PlotAircraftSim(time, aircraft_state_array, control_input,fig, col)
    grid on
    axis equal
    title('3D Flight Path')
-   saveas(gcf,'3D.jpg');
+   saveas(gcf,append(Q,'3D.jpg'));
 
 end
