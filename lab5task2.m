@@ -9,15 +9,13 @@ ttwistor
 
 %% Choose what to plot
 
-TEST_CASE_2_1 = 1;
+TEST_CASE_2_1 = 0;
 TEST_CASE_2_2 = 1;
-TEST_CASE_2_3 = 1;
+TEST_CASE_2_3 = 0;
 
 %% TEST CASE 2.1
 
 if TEST_CASE_2_1
-
-    Q = '2.1 ';
     
     %initial state - all 0 except for h = 1609.34 m and u = 21 m/s
     aircraft_state =  [0; %x
@@ -49,16 +47,14 @@ if TEST_CASE_2_1
     ode = @(t, x) AircraftEOM(t, x, aircraft_surfaces, wind_inertial, aircraft_parameters); 
     options = odeset('RelTol', 1e-6, 'AbsTol', 1e-8); 
     [t, x] = ode45(ode, tspan, aircraft_state, options); 
-    
-    PlotAircraftSim(t, x', aircraft_surfaces,fig, col,Q)
+
+    PlotAircraftSim(t, x', aircraft_surfaces,fig, col,'2.1 ')
 
 end
 
 %% TEST CASE 2.2
 
 if TEST_CASE_2_2
-
-    Q = '2.2 ';
 
     aircraft_state =  [0; %x
                       0;  %y
@@ -83,22 +79,20 @@ if TEST_CASE_2_2
     wind_inertial = [0;0;0];
     
     % time span
-    tspan = [0 1000];
+    tspan = [0 70];
     
     % run ode45 with EOM function
     ode = @(t, x) AircraftEOM(t, x, aircraft_surfaces, wind_inertial, aircraft_parameters); 
     options = odeset('RelTol', 1e-6, 'AbsTol', 1e-8); 
     [t, x] = ode45(ode, tspan, aircraft_state, options); 
-    
-    PlotAircraftSim(t, x', aircraft_surfaces,fig, col,Q)
+
+    PlotAircraftSim(t, x', aircraft_surfaces,fig, col,'2.2 ')
 
 end
 
 %% TEST CASE 2.3
 
 if TEST_CASE_2_3
-
-    Q = '2.3 ';
 
     aircraft_state =  [0; %x
                       0;  %y
@@ -123,17 +117,16 @@ if TEST_CASE_2_3
     wind_inertial = [0;0;0];
     
     % time span
-    tspan = [0 200];
+    tspan = [0 125];
     
     % run ode45 with EOM function
     ode = @(t, x) AircraftEOM(t, x, aircraft_surfaces, wind_inertial, aircraft_parameters); 
     options = odeset('RelTol', 1e-6, 'AbsTol', 1e-8); 
     [t, x] = ode45(ode, tspan, aircraft_state, options); 
-    
-    PlotAircraftSim(t, x', aircraft_surfaces,fig, col,Q)
+
+    PlotAircraftSim(t, x', aircraft_surfaces,fig, col,'2.3 ')
 
 end
-
 
 
 function xdot = AircraftEOM(time, aircraft_state, aircraft_surfaces, wind_inertial, aircraft_parameters)
@@ -244,7 +237,7 @@ function xdot = AircraftEOM(time, aircraft_state, aircraft_surfaces, wind_inerti
     % solve for r dot
     xdot(12) = gamma7 * p * q - gamma1 * q * r + gamma4 * L + gamma8 * N; 
 
-    end 
+end
 
 function B = TransformFromInertialToBody(I,aircraft_state)
 
@@ -465,6 +458,7 @@ function PlotAircraftSim(time, aircraft_state_array, control_input,fig,col,Q)
    % 3D Flight Path
    figure(fig(6));
    plot3(aircraft_state_array(1,:), aircraft_state_array(2,:), -aircraft_state_array(3,:), col, 'LineWidth', 1.5)
+   axis square
    hold on
    plot3(aircraft_state_array(1,1), aircraft_state_array(2,1), -aircraft_state_array(3,1), 'go', 'MarkerFaceColor', 'g')
    hold on
@@ -473,7 +467,6 @@ function PlotAircraftSim(time, aircraft_state_array, control_input,fig,col,Q)
    ylabel('y_E [m]')
    zlabel('z_E [m]')
    grid on
-   axis equal
    title('3D Flight Path')
    saveas(gcf,append(Q,'3D.jpg'));
 
