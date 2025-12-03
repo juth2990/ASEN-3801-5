@@ -50,7 +50,13 @@ if TEST_CASE_2_1
     options = odeset('RelTol', 1e-6, 'AbsTol', 1e-8); 
     [t, x] = ode45(ode, tspan, aircraft_state, options); 
 
-    PlotAircraftSim(t, x', aircraft_surfaces,fig, col,'2.1 ')
+    control_input_array = zeros(4,length(t));
+    control_input_array(1,:) = zeros(1,length(t))+aircraft_surfaces(1);
+    control_input_array(2,:) = zeros(1,length(t))+aircraft_surfaces(2);
+    control_input_array(3,:) = zeros(1,length(t))+aircraft_surfaces(3);
+    control_input_array(4,:) = zeros(1,length(t))+aircraft_surfaces(4);
+
+    PlotAircraftSim(t, x', control_input_array,fig, col,'2.1 ')
 
 end
 
@@ -88,7 +94,13 @@ if TEST_CASE_2_2
     options = odeset('RelTol', 1e-6, 'AbsTol', 1e-8); 
     [t, x] = ode45(ode, tspan, aircraft_state, options); 
 
-    PlotAircraftSim(t, x', aircraft_surfaces,fig, col,'2.2 ')
+    control_input_array = zeros(4,length(t));
+    control_input_array(1,:) = zeros(1,length(t))+aircraft_surfaces(1);
+    control_input_array(2,:) = zeros(1,length(t))+aircraft_surfaces(2);
+    control_input_array(3,:) = zeros(1,length(t))+aircraft_surfaces(3);
+    control_input_array(4,:) = zeros(1,length(t))+aircraft_surfaces(4);
+
+    PlotAircraftSim(t, x', control_input_array,fig, col,'2.2 ')
 
 end
 
@@ -126,7 +138,13 @@ if TEST_CASE_2_3
     options = odeset('RelTol', 1e-6, 'AbsTol', 1e-8); 
     [t, x] = ode45(ode, tspan, aircraft_state, options); 
 
-    PlotAircraftSim(t, x', aircraft_surfaces,fig, col,'2.3 ')
+    control_input_array = zeros(4,length(t));
+    control_input_array(1,:) = zeros(1,length(t))+aircraft_surfaces(1);
+    control_input_array(2,:) = zeros(1,length(t))+aircraft_surfaces(2);
+    control_input_array(3,:) = zeros(1,length(t))+aircraft_surfaces(3);
+    control_input_array(4,:) = zeros(1,length(t))+aircraft_surfaces(4);
+
+    PlotAircraftSim(t, x', control_input_array,fig, col,'2.3 ')
 
 end
 %% TEST CASE 3.1
@@ -194,7 +212,7 @@ if TEST_CASE_3_2
       0;
       0]; 
 
-fig = [19 20 21 22 23 24];
+fig = 25:30;
 col = 'b';
 
 % control surfaces all set to 0
@@ -446,8 +464,6 @@ wind_angles = [V; beta; alpha];
 end
 
 function PlotAircraftSim(time, aircraft_state_array, control_input,fig,col,Q)
-   
-
 
    % position subplot
    figure(fig(1))
@@ -564,6 +580,7 @@ function PlotAircraftSim(time, aircraft_state_array, control_input,fig,col,Q)
    saveas(gcf,append(Q,'3D.jpg'));
 
 end
+
 function xdot = AircraftEOMDoublet(time, aircraft_state, aircraft_surfaces, doublet_size,doublet_time, wind_inertial, aircraft_parameters)
     % aircraft_state = [xi, yi, zi, roll, pitch, yaw, u, v, w, p, q, r]
     % extract states
@@ -581,18 +598,23 @@ function xdot = AircraftEOMDoublet(time, aircraft_state, aircraft_surfaces, doub
     r = aircraft_state(12); 
     % aircraft_surfaces = [de da dr dt];
     % extract control surfaces
-    de = aircraft_surfaces(1); 
-    da = aircraft_surfaces(2);
-    dr = aircraft_surfaces(3);
-    dt = aircraft_surfaces(4);
-    
+
+        %% Changing Elevator deflection
+ 
+    if 0 < time && time <= doublet_time
+        de = aircraft_surfaces(1) + doublet_size;
+    elseif doublet_time < time && time <= 2*doublet_time
+        de = aircraft_surfaces(1) - doublet_size;
+    else
+        de = aircraft_surfaces(1);
+    end 
 
     [T,a,P,rho] = atmoscoesa(-z);
     g = aircraft_parameters.g; 
     m = aircraft_parameters.m;
     
     % calculate aero forces and moments
-    [aero_forces, aero_moments] = AeroForcesAndMoments(aircraft_state, aircraft_surfaces, wind_inertial, rho, aircraft_parameters);
+    [aero_forces, aero_moments] = AeroForcesAndMoments(aircraft_state, [de;aircraft_surfaces(2:4)], wind_inertial, rho, aircraft_parameters);
     
     % extract aero forces
     X = aero_forces(1); 
@@ -614,16 +636,6 @@ function xdot = AircraftEOMDoublet(time, aircraft_state, aircraft_surfaces, doub
 
     % initialize xdot vector
     xdot = zeros(12,1); 
-    %% Changing Elevator deflection
- 
-    if 0 < time && time <= doublet_time
-        deltaE = aircraft_surfaces(1) + doublet_size;
-    elseif doublet_time < time && time <= 2*doublet_time
-        deltaE = aircraft_surfaces(1) - doublet_size;
-    else
-        deltaE = aircraft_surfaces(1);
-    end
-
     
     %% Kinematic Equations: 
     
