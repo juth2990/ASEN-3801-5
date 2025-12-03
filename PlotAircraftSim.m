@@ -1,10 +1,4 @@
 function PlotAircraftSim(time, aircraft_state_array, control_input,fig, col)
-   
-
-   control_input_array(1,:) = zeros(1,length(time))+control_input(1);
-   control_input_array(2,:) = zeros(1,length(time))+control_input(2);
-   control_input_array(3,:) = zeros(1,length(time))+control_input(3);
-   control_input_array(4,:) = zeros(1,length(time))+control_input(4);
 
    % position subplot
    figure(fig(1))
@@ -87,21 +81,21 @@ function PlotAircraftSim(time, aircraft_state_array, control_input,fig, col)
    hold on
    subplot(4,1,1)
    hold on
-   plot(time, control_input_array(1,:), col)
+   plot(time, control_input(1,:), col)
    hold on
    ylabel('Elevator')
    title('Control Inputs')
    subplot(4,1,2)
    hold on
-   plot(time, control_input_array(2,:), col)
+   plot(time, control_input(2,:), col)
    ylabel('Aileron')
    subplot(4,1,3)
    hold on
-   plot(time, control_input_array(3,:), col)
+   plot(time, control_input(3,:), col)
    ylabel('Rudder')
    subplot(4,1,4)
    hold on
-   plot(time, control_input_array(4,:), col)
+   plot(time, control_input(4,:), col)
    ylabel('Thrust')
    
    saveas(gcf,'Control.jpg');
